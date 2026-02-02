@@ -1,145 +1,163 @@
-# ReformaTax Monorepo
+# ReformaTax
 
-AI-powered Q&A platform for Brazilian Tax Reform, organized as a modular monorepo with clear service boundaries.
+AI-powered Q&A platform for Brazilian Tax Reform, built with React and FastAPI.
 
 ## Architecture Overview
 
-This monorepo follows the **Modular Service Boundaries** principle from the Technical Stack specification, enabling AI agents to modify one service without breaking others:
+This project follows a **simple dual-service architecture** with clear separation between frontend and backend:
 
 ```
-├── apps/                    # Applications
-│   ├── frontend/            # React/Next.js application (TypeScript)
-│   └── backend/             # FastAPI services (Python)
-├── packages/               # Shared libraries
-│   ├── types/             # TypeScript definitions
-│   ├── shared/            # Common business logic
-│   └── utils/            # Utility functions
+├── apps/
+│   ├── frontend/           # React + Vite application (TypeScript)
+│   └── backend/            # FastAPI services (Python)
 ├── docs/                  # Documentation
-└── scripts/               # Build and development scripts
+└── dist/                  # Build output
 ```
 
-## Services & Boundaries
+## Services & Stack
 
 ### 🎨 Frontend (`apps/frontend`)
-- **Technology**: Next.js 14+ with TypeScript
-- **Purpose**: User interface, chat UI, auth integration
-- **Boundary**: Pure presentation layer, no business logic
-- **Dependencies**: `@reform-tax/types`, `@reform-tax/shared`
+- **Technology**: React 19.2.0 + TypeScript + Vite
+- **Styling**: Tailwind CSS v4.1.18
+- **Build Tool**: Vite with rolldown-vite 7.2.5
+- **Purpose**: User interface, chat UI, tax reform Q&A
+- **Features**: Responsive design, dark theme, component-based architecture
+- **Development**: Hot reload, ESLint, TypeScript strict mode
 
 ### 🔧 Backend (`apps/backend`) 
-- **Technology**: FastAPI with TypeScript
-- **Purpose**: Query processing, RAG pipeline, API endpoints
-- **Boundary**: Core business logic and data processing
-- **Dependencies**: `@reform-tax/types`, `@reform-tax/shared`, `@reform-tax/utils`
-
-### 📋 Types (`packages/types`)
-- **Technology**: TypeScript definitions only
-- **Purpose**: Shared interfaces and type definitions
-- **Boundary**: Pure type definitions, no runtime code
-- **Consumed by**: All packages
-
-### 🔄 Shared (`packages/shared`)
-- **Technology**: TypeScript utility functions
-- **Purpose**: Common business logic (validation, formatting)
-- **Boundary**: Stateless pure functions
-- **Dependencies**: `@reform-tax/types`
-
-### 🛠️ Utils (`packages/utils`)
-- **Technology**: TypeScript helper functions
-- **Purpose**: Backend utilities (rate limiting, retry, etc.)
-- **Boundary**: Infrastructure-agnostic utilities
-- **Dependencies**: `@reform-tax/types`, `@reform-tax/shared`
+- **Technology**: FastAPI + Python
+- **Data**: ChromaDB for vector storage
+- **AI**: Groq API for LLM integration
+- **Cache**: Redis for session management
+- **Features**: Rate limiting, CORS, async processing, background workers
+- **API**: RESTful endpoints with OpenAPI auto-documentation
 
 ## Getting Started
 
 ### Prerequisites
 - Node.js 18+
+- Python 3.8+
 - npm 9+
 
 ### Setup
+
+**Frontend:**
 ```bash
-# Clone and setup
-git clone <repository>
-cd reform-tax
-chmod +x scripts/setup.sh
-./scripts/setup.sh
+cd apps/frontend
+# Note: This is a standalone app, not a monorepo workspace
+# Remove workspace dependencies from package.json first, then:
+npm install
+npm run dev
+# Frontend runs on http://localhost:3000
+```
+
+**Backend:**
+```bash
+cd apps/backend
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn src.main:app --reload
+# Backend runs on http://localhost:8000
 ```
 
 ### Development
-```bash
-# Start all services
-npm run dev
 
-# Start individual services
-npm run dev:frontend    # Frontend on http://localhost:3000
-npm run dev:backend     # Backend on http://localhost:3001
+**Start Frontend:**
+```bash
+cd apps/frontend
+npm run dev          # Development server with hot reload
+npm run build        # Production build
+npm run lint         # ESLint checking
+npm run typecheck    # TypeScript type checking
+npm run preview      # Preview production build
 ```
 
-### Building
+**Start Backend:**
 ```bash
-# Build all packages
-npm run build
-
-# Build specific package
-npm run build --workspace=@reform-tax/frontend
-npm run build --workspace=@reform-tax/backend
+cd apps/backend
+uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+# API docs available at http://localhost:8000/docs
 ```
 
 ### Quality Assurance
+
+**Frontend:**
 ```bash
-# Lint all packages
-npm run lint
-
-# Type checking
-npm run typecheck
-
-# Clean build artifacts
-npm run clean
+npm run lint         # ESLint
+npm run typecheck    # TypeScript type checking
+npx tsc --noEmit     # Additional type checking
 ```
 
-## AI Agent Compatibility
+**Backend:**
+```bash
+# API documentation: http://localhost:8000/docs
+# Health check: http://localhost:8000/health
+```
 
-This monorepo is designed for AI agent development:
+## API Endpoints
 
-### 🔄 Modular Service Boundaries
-Each service has:
-- Clear interfaces and contracts
-- Minimal coupling
-- Independent deployment capability
+### Backend API (http://localhost:8000)
 
-### 📋 OpenAPI-First Backend
-FastAPI auto-generates OpenAPI specifications for endpoint discovery.
+**Query Processing:**
+- `POST /api/query` - Submit tax reform questions
+- `GET /api/user/{user_id}` - Get user info and rate limits
+- `GET /health` - Service health check
 
-### 🎯 Strict TypeScript
-All contracts are typed with Pydantic-style validation patterns.
+**Features:**
+- Rate limiting (RPM and daily limits)
+- User tiers (FREE/PRO)
+- Citation-grounded responses
+- Multi-modal prompt engineering
 
-### 📦 Workspace Management
-npm workspaces enable:
-- Cross-package type checking
-- Atomic dependency management  
-- Consistent build processes
+### Frontend Features
 
-## Development Workflow
-
-1. **Feature Development**: Work within service boundaries
-2. **Interface Changes**: Update `packages/types` first
-3. **Cross-Service Updates**: Build packages in dependency order
-4. **Testing**: Run type checking across all packages
-5. **Deployment**: Services deploy independently
+- **UI Components**: System prompts, chat interface, PRD viewer
+- **Styling**: Dark theme, responsive design, Tailwind utilities
+- **Type Safety**: Strict TypeScript, comprehensive interfaces
+- **Development**: Hot reload, linting, type checking
 
 ## Technical Stack
 
-- **Frontend**: Next.js 14+, React 19, TypeScript, Tailwind CSS
-- **Backend**: FastAPI, TypeScript, ChromaDB, Groq API
-- **Infrastructure**: Vercel (frontend), Railway (backend)
-- **Development**: Vite, npm workspaces, ESLint
+**Frontend:**
+- React 19.2.0 with TypeScript 5.9
+- Vite (rolldown-vite 7.2.5) for fast development
+- Tailwind CSS v4.1.18 for styling
+- ESLint + TypeScript ESLint for code quality
 
-## Next Steps
+**Backend:**
+- FastAPI with Python
+- ChromaDB for vector storage and RAG
+- Groq API for AI/LLM integration
+- Redis for caching and session management
+- Pydantic v2 for data validation
 
-1. Implement RAG pipeline in backend
-2. Add ChromaDB integration
-3. Connect frontend to backend APIs
-4. Implement authentication flow
-5. Add rate limiting and quotas
+**Development Tools:**
+- Vite for frontend bundling
+- Uvicorn for backend serving
+- ESLint for linting
+- TypeScript strict mode for type safety
 
-This structure enables rapid, independent development while maintaining clear boundaries for AI agent assistance.
+## Current Implementation Status
+
+✅ **Completed:**
+- Frontend React application with Tailwind styling
+- Backend FastAPI with rate limiting and CORS
+- Basic API structure with health checks
+- Mock query responses with citations
+- Background worker system for content processing
+
+🚧 **In Progress:**
+- RAG pipeline implementation
+- ChromaDB vector integration
+- Actual LLM calls to Groq API
+- Content scraping and processing
+
+📋 **Next Steps:**
+1. Complete RAG pipeline with ChromaDB
+2. Implement Groq API integration
+3. Add authentication system
+4. Deploy to production infrastructure
+5. Add comprehensive testing
+
+This architecture provides a solid foundation for building AI-powered tax reform Q&A services while maintaining clean separation between presentation and business logic.
