@@ -1,0 +1,32 @@
+{
+  "name": "reform-tax-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "npm run dev --workspace=@reform-tax/frontend",
+    "dev:backend": "cd apps/backend && uvicorn src.main:app --reload --port 3001",
+    "build": "npm run build --workspaces",
+    "build:frontend": "npm run build --workspace=@reform-tax/frontend",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "clean": "npm run clean --workspaces && rm -rf node_modules",
+    "setup": "npm install && npm run build --workspaces",
+    "setup:backend": "cd apps/backend && pip install -r requirements.txt"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "@types/node": "^24.10.1",
+    "typescript": "~5.9.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

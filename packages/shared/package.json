@@ -1,0 +1,20 @@
+{
+  "name": "@reform-tax/shared",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'No linting configured for shared package'",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@reform-tax/types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  }
+}
