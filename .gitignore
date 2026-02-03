@@ -25,3 +25,18 @@ dist-ssr
 
 # Git worktrees
 .worktrees
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+ENV/
+.pytest_cache/
+*.egg-info/
+dist/
+build/
