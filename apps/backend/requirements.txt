@@ -1,10 +1,15 @@
-fastapi
-uvicorn[standard]
-pydantic>=2.0.0
-pydantic-settings
-python-dotenv
-httpx
-requests
-redis
-chromadb
-groq
+# Existing dependencies (FastAPI stack)
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pydantic>=2.10.0
+pydantic-settings>=2.6.0
+
+# New RAG dependencies
+beautifulsoup4>=4.12.3
+markdownify>=0.13.1
+chromadb>=0.5.20
+ollama>=0.4.4
+groq>=0.13.0
+rank-bm25>=0.2.2
+tiktoken>=0.8.0
+httpx>=0.28.1
