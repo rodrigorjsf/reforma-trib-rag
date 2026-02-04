@@ -93,12 +93,12 @@ class PlanaltoScraper:
             "DECRETO Nº 12.345 DE 2024" -> "DECRETO_12345_2024"
         """
         # Try to match Lei Complementar
-        lc_match = re.search(r'LEI\s+COMPLEMENTAR\s+N[ºÃ]\s*(\d+).*?(\d{4})', title, re.IGNORECASE)
+        lc_match = re.search(r'LEI\s+COMPLEMENTAR\s+N[ºÃ]\s*(\d+)[^0-9]*(\d{4})', title, re.IGNORECASE)
         if lc_match:
             return f"LC_{lc_match.group(1)}_{lc_match.group(2)}"
 
         # Try to match Decreto
-        decreto_match = re.search(r'DECRETO\s+N[ºÃ]\s*([\d.]+).*?(\d{4})', title, re.IGNORECASE)
+        decreto_match = re.search(r'DECRETO\s+N[ºÃ]\s*([\d.]+)[^0-9]*(\d{4})', title, re.IGNORECASE)
         if decreto_match:
             number = decreto_match.group(1).replace('.', '')
             return f"DECRETO_{number}_{decreto_match.group(2)}"

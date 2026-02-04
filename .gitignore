@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+build/
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
@@ -40,3 +42,12 @@ ENV/
 *.egg-info/
 dist/
 build/
+
+
+# Python
+__pycache__/
+*/__pycache__/
+*.py[cod]
+.env
+.env.local
+*=*
